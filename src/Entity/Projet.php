@@ -26,7 +26,7 @@ class Projet
     private $description;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="string", length=255)
      */
     private $date;
 
@@ -39,6 +39,11 @@ class Projet
      * @ORM\OneToMany(targetEntity="Image", mappedBy="projet", orphanRemoval=true, cascade={"persist"})
      */
     private $images;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $title;
 
     public function __construct()
     {
@@ -62,12 +67,12 @@ class Projet
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?string
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): self
+    public function setDate(string $date): self
     {
         $this->date = $date;
 
@@ -112,6 +117,18 @@ class Projet
                 $image->setProjet(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
 
         return $this;
     }

@@ -22,6 +22,9 @@ class ProjetController extends AbstractController
      */
     public function index(ProjetRepository $projetRepository): Response
     {
+        if ($this->isGranted('ROLE_ADMIN') == false) {
+            return $this->redirectToRoute('home');
+        }
         return $this->render('projet/index.html.twig', [
             'projets' => $projetRepository->findAll(),
         ]);
@@ -32,6 +35,9 @@ class ProjetController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        if ($this->isGranted('ROLE_USER') == false) {
+            return $this->redirectToRoute('home');
+        }
         $projet = new Projet();
         $form = $this->createForm(ProjetType::class, $projet);
         $form->handleRequest($request);
@@ -78,6 +84,9 @@ class ProjetController extends AbstractController
      */
     public function edit(Request $request, Projet $projet): Response
     {
+        if ($this->isGranted('ROLE_USER') == false) {
+            return $this->redirectToRoute('home');
+        }
         $form = $this->createForm(ProjetType::class, $projet);
         $form->handleRequest($request);
 
@@ -110,6 +119,9 @@ class ProjetController extends AbstractController
      */
     public function delete(Request $request, Projet $projet): Response
     {
+        if ($this->isGranted('ROLE_USER') == false) {
+            return $this->redirectToRoute('home');
+        }
         if ($this->isCsrfTokenValid('delete'.$projet->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($projet);
@@ -122,7 +134,11 @@ class ProjetController extends AbstractController
     /**
      * @Route("/delete/image/{id}", name="delete_image", methods={"delete"})
      */
-    public function deleteImage(Image $image, Request $request){
+    public function deleteImage(Image $image, Request $request)
+    {
+        if ($this->isGranted('ROLE_USER') == false) {
+            return $this->redirectToRoute('home');
+        }
         $data =JSON_decode($request->getContent(), true);
         if($this->isCsrfTokenValid('delete'.$image->getId(), $data['_token'])){
             $nom = $image->getName();
